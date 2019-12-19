@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 4000 });
 
-const notes = [];
+const tasks = [];
 
 const broadcastMessage = (message) => {
   wss.clients.forEach((client) => {
@@ -19,11 +19,11 @@ const updateUserCount = () => {
   });
 };
 
-const broadcastAllMessages = (newNote) => {
-  notes.unshift(newNote);
+const broadcastAllMessages = (newTask) => {
+  notes.unshift(newTask);
   broadcastMessage({
     type: 'UPDATE_MESSAGES',
-    notes,
+    tasks,
   });
 };
 
@@ -40,7 +40,7 @@ wss.on('connection', (ws) => {
     const messageObject = JSON.parse(message);
     switch (messageObject.type) {
       case 'SEND_MESSAGE':
-        broadcastAllMessages(messageObject.newNote);
+        broadcastAllMessages(messageObject.newTask);
         break;
     }
     console.log(message);
